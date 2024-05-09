@@ -1,6 +1,8 @@
-## Code for the paper "[The Impact of Exposed Passwords on Honeyword Efficacy](https://arxiv.org/pdf/2309.10323)'' accepted by the proceedings of the 33rd USENIX Security Symposium, August, 2024
+## Code for the paper "[The Impact of Exposed Passwords on Honeyword Efficacy](https://arxiv.org/pdf/2309.10323)'' accepted by the proceedings of the 33rd USENIX Security Symposium, August, 2024 (Under construction)
 
 ### Environment
+
+Please let me know if there is any missing package list here.
 ```
 python==3.9.15
 1password==0.6.2
