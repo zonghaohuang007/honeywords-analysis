@@ -18,11 +18,31 @@ zxcvbn-python==4.4.24
 
 The first step is to download the 4iQ data. Please see "Get the data" in [the git repo](https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis).
 
-After downloading the data (e.g., by following the "Get the data" step), you will get a dir named "BreachCompilation" where there are data files included. Then you can run by:
+After downloading the data (e.g., by following the "Get the data" step), you will get a dir named "BreachCompilation" where there are data files included. Then you can reprocess the data by running:
 
 ```
 python3 preprocess/read.py
 python3 preprocess/process.py
 ```
 
-The above running will filter out those passwords that do not meet some specific requirements, e.g., too long or too short, and group passwords based on the username of the emails such that each group represents a user.
+The above running will filter out those passwords that do not meet some specific requirements, e.g., too long or too short, and group passwords based on the usernames of the emails such that each group represents a user.
+
+### Split data into a training set and a test set
+
+We split the users into a training group (80%) and a test group (20%) by running:
+
+```
+python3 data_split.py
+```
+
+### Model training
+
+In our work, there are some honeyword-generation methods that require a ML model, e.g., RNN, Tweak, and Pass2Path. Also, to implement the FN attacker in user-chosen case, we need a similarity model that measures the password similarity; to implement the FN attacker in algorithmically generated case, we need a classifier to classify a given password into one of the password generators. To train these ML models, you can run:
+```
+python3 train_model/train_rnn_model.py   # RNN for honeyword-generation
+python3 train_model/train_rnn_target.py   # target-RNN for honeyword-generation
+python3 train_model/train_tweak_model.py   # Tweak for honeyword-generation
+python3 train_model/train_pass2path_model.py   # Pass2path for honeyword-generation
+python3 train_model/train_new_metric_model.py   # similarity model for FN attacker in user-chosen case
+python3 train_model/train_gen_classifier.py   # classifier for FN attacker in algorthmically generated case
+```
