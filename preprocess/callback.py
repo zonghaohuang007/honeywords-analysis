@@ -1,3 +1,8 @@
+
+'''
+This code is from https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis
+'''
+
 import json
 import os
 

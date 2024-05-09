@@ -1,10 +1,11 @@
-## Code for the paper "The Impact of Exposed Passwords on Honeyword Efficacy'' accepted by the proceedings of the 33rd USENIX Security Symposium, August, 2024
+## Code for the paper "[The Impact of Exposed Passwords on Honeyword Efficacy](https://arxiv.org/pdf/2309.10323)'' accepted by the proceedings of the 33rd USENIX Security Symposium, August, 2024
 
 ### Environment
 ```
 python==3.9.15
 1password==0.6.2
 ckl-psm==1.2
+editdistance==0.8.1
 fasttext==0.9.2
 lastpass-python==0.3.2
 numpy==1.23.5
@@ -18,7 +19,7 @@ zxcvbn-python==4.4.24
 
 The first step is to download the 4iQ data. Please see "Get the data" in [the git repo](https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis).
 
-After downloading the data (e.g., by following the "Get the data" step), you will get a dir named "BreachCompilation" where there are data files included. Then you can reprocess the data by running:
+After downloading the data (e.g., by following the "Get the data" step), you will get a dir named "BreachCompilation" where there are data files included. Then you can reprocess the data by running (please make sure that your machine to process the data has enough memory):
 
 ```
 python3 preprocess/read.py
@@ -45,4 +46,46 @@ python3 train_model/train_tweak_model.py   # Tweak for honeyword-generation
 python3 train_model/train_pass2path_model.py   # Pass2path for honeyword-generation
 python3 train_model/train_new_metric_model.py   # similarity model for FN attacker in user-chosen case
 python3 train_model/train_gen_classifier.py   # classifier for FN attacker in algorthmically generated case
+```
+
+### Honeyword-generation (user-chosen case)
+
+To generate honeywords, please run:
+```
+python3 generate_honeywords.py 
+```
+
+### FN attack evaluation (user-chosen case)
+
+To evaluate the generated honeywords, please run:
+```
+python3 evaluate_FN.py
+```
+
+### FP attack evaluation (user-chosen case)
+
+To evaluate the generated honeywords, please run:
+```
+python3 evaluate_FP.py
+```
+
+### Honeyword-generation (algorithmically generated case)
+
+To generate honeywords, please run:
+```
+python3 generate_honeywords_machine.py
+```
+
+### FN attack evaluation (algorithmically generated case)
+
+To evaluate the generated honeywords, please run:
+```
+python3 evaluate_FN_machine.py
+```
+
+### FP attack evaluation (algorithmically generated case)
+
+To evaluate the generated honeywords, please run:
+```
+python3 evaluate_FP_machine.py
 ```

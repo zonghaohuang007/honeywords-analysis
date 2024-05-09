@@ -1,3 +1,7 @@
+'''
+This code is modified from https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis
+'''
+
 import os
 import pickle
 import numpy as np
@@ -70,17 +74,6 @@ if __name__ == '__main__':
                 num = num + 1
                 if num % 1e7 == 0:
                     print('load {} users'.format(num))
-
-            # if len(password) > 5:
-            #     continue
-
-            # for k in range(len(password)-1):
-            #     for r in range(k+1,len(password)):
-            #         data.append([password[k], password[r]])
-            #         num = num + 1
-            #         if num % 1e7 == 0:
-            #             print(password)
-            #             print('load {} password pairs'.format(num))
     
     with open('/BreachCompilationAnalysis/PasswordPairs/data.pickle', 'wb') as f:
         pickle.dump(data, f)

@@ -1,3 +1,7 @@
+'''
+This code is modified from https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis
+'''
+
 import argparse
 
 from callback import ReducePasswordsOnSimilarEmailsCallback
@@ -27,10 +31,6 @@ parser.add_argument('--max_num_files',
 # z/z
 
 def read():
-    # arg_p = parser.parse_args()
-    # read_n_files(breach_compilation_folder=arg_p.breach_compilation_folder,
-    #              num_files=arg_p.max_num_files,
-    #              on_file_read_call_back_class=ReducePasswordsOnSimilarEmailsCallback)
     read_files(breach_compilation_folder='./BreachCompilation')
 
 

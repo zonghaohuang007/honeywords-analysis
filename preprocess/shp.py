@@ -1,3 +1,8 @@
+'''
+This code is modified from https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis
+'''
+
+
 import itertools
 import json
 from itertools import combinations
