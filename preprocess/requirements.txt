@@ -1,0 +1,6 @@
+keras
+tensorflow
+tqdm
+unicode_slugify
+editdistance
+numpy
