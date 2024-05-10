@@ -37,7 +37,7 @@ if __name__ == '__main__':
     data = {}
     num = 0
     for i in range(1, 12):
-        with open('/BreachCompilationAnalysis/PasswordPairs/data_' + str(i) + '.pickle', 'rb') as f:
+        with open('/BreachCompilationAnalysis/preprocessed_data/data_' + str(i) + '.pickle', 'rb') as f:
             data_dir = pickle.load(f)
         print('loaded {}'.format(i))
         for j in data_dir.keys():
@@ -75,7 +75,7 @@ if __name__ == '__main__':
                 if num % 1e7 == 0:
                     print('load {} users'.format(num))
     
-    with open('/BreachCompilationAnalysis/PasswordPairs/data.pickle', 'wb') as f:
+    with open('/BreachCompilationAnalysis/preprocessed_data/data.pickle', 'wb') as f:
         pickle.dump(data, f)
 
     print('The total number of users is {}'.format(num))

@@ -4,8 +4,7 @@ This code is modified from https://github.com/philipperemy/tensorflow-1.4-billio
 
 import argparse
 
-from callback import ReducePasswordsOnSimilarEmailsCallback
-from utils import read_n_files, read_files
+from utils import read_files
 
 
 parser = argparse.ArgumentParser(description='Process some integers.')
@@ -31,6 +30,9 @@ parser.add_argument('--max_num_files',
 # z/z
 
 def read():
+    '''
+    please make sure that breach_compilation_folder is set to be the path of the downloaded data.
+    '''
     read_files(breach_compilation_folder='./BreachCompilation')
 
 
