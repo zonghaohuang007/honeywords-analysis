@@ -67,26 +67,15 @@ def trunc_decimal(val):
     return int(val * 1000) / 1000
 
 
-def imagesc(img, mode='fg', title=None, experiment=None, step=None, label=None):
+def imagesc(img, label):
     x, y = img
     plt.clf()
     plt.plot(x, y, label=label, linewidth=2)
-    # plt.plot(x, y, color='blue', linestyle='dashed', linewidth=3, label=label)
-    if mode == 'fg':
-        y1 = np.array(list(range(1,len(y)+1)))/len(y)
-        plt.plot(x, y1, label='baseline', linewidth=2)
-        plt.ylabel('success rate')
-    elif mode == 'sng':
-        y1 = np.array(list(range(1,len(y)+1)))/100
-        plt.plot(x, y1, label='baseline', linewidth=2)
-        plt.ylabel('# success')
+    y1 = np.array(list(range(1,len(y)+1)))/len(y)
+    plt.plot(x, y1, label='baseline', linewidth=2)
+    plt.ylabel('success rate')
     plt.legend()
     plt.xlabel('# guess')
-    # plt.show()
-    if title:
-        plt.title(title)
-    if experiment:
-        experiment.log_figure(figure_name=title, step=step)
 
     return plt
 

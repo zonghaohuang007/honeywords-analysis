@@ -59,13 +59,7 @@ if __name__ == '__main__':
     parser.add_argument('--hardness', type=str, default='easy')
     args = parser.parse_args()
 
-    args.name_file = args.data_path.split('/')[-1].split('.')[0]
-    if args.pw_dependent:
-        args.data_path = './hw/' + args.hw_model + '/' + args.name_file + '/pw_dependent'
-    elif args.target:
-        args.data_path = './hw/' + args.hw_model + '/' + args.name_file + '/target'
-    else:
-        args.data_path = './hw/' + args.hw_model + '/' + args.name_file
+    args.save_path = './hw/{}(hw:{})'.format(args.hw_gen_method, args.n_hw)
 
     # load CM map: a dictionary to map char or special symbol or number into digit
     char_map, char_map_inv = load_charmap('./char_map.pickle')
@@ -73,37 +67,25 @@ if __name__ == '__main__':
     id_sos = len(char_map)
     args.char_size = char_size
 
-    # set up comet ml experiment
-    print('==> setting up comet experiment...')
-    experiment = Experiment(project_name='Honeywords-evaluation', auto_param_logging=False,
-                            api_key='U1kuka6SA58EBpCa8Ct6CY1fp',
-                            auto_metric_logging=False,
-                            parse_args=False)
-    comet_ml.config.experiment = None
-    experiment.set_name(exp_name)
-    experiment.add_tag('')
-    experiment.log_parameters(vars(args))
-
     # load data
     with open(args.data_path + '/sweetwords.pickle', 'rb') as f:
         sw = pickle.load(f)
     with open(args.data_path + '/password_index.pickle', 'rb') as f:
         pw_index = pickle.load(f)
-    # with open(args.data_path + '/aux_passwords.pickle', 'rb') as f:
-    #     aux_pw = pickle.load(f)
-    with open('/usr/project/xtmp/zh127/hw_data/data/data_20220904/auxlist_20220904_10000.pickle', 'rb') as f:
+    with open(args.data_path + '/aux_passwords.pickle', 'rb') as f:
         aux_pw = pickle.load(f)
+
     print('==> loaded data successfully.')
 
     # load model
-    dic = torch.load('./saved_model/transformer_metric_model/model', map_location='cuda:0')
+    dic = torch.load('./saved_model/similarity_model/model', map_location='cuda:0')
     model = Transformer_embedding(char_size, dic['out_dim'], dic['num_layer'], dic['d_model'], dic['nhead'], dic['embedding_dim'])
     model.load_state_dict(dic['model'])
     model.to(device)
     model.eval()
     print('==> loaded model successfully!')
 
-    if args.eval_mode == 'fg':
+    if True:
         fg_success_track = np.zeros(shape=[len(sw[0]), ], dtype=np.float32)
         fg_guess_track = list(range(1, len(sw[0]) + 1))
         fg_guess_track = np.array(fg_guess_track)
@@ -173,21 +155,11 @@ if __name__ == '__main__':
                 num = num + 1
                 if num % 100 == 0:
                     print('==> finished {} / {} hw evaluations | cost time: {} sec/sw'.format(num, i + 1, (time() - tic0) / 100))
-                    plt = imagesc([fg_guess_track, fg_success_track], mode='fg', title='flatness graph', experiment=experiment, step=num, label=args.hw_model)
-                    plt.savefig(args.data_path + '/' + args.eval_mode + '_{}.png'.format(args.hardness))
+                    plt = imagesc([fg_guess_track, fg_success_track], label=args.hw_model)
+                    plt.savefig(args.data_path + '/' + 'FN_{}.png'.format(args.hardness))
                     tic0 = time()
-        plt = imagesc([fg_guess_track, fg_success_track], mode='fg', title='flatness graph', experiment=experiment, step=len(sw), label=args.hw_model)
-        plt.savefig(args.data_path + '/' + args.eval_mode + '_{}.png'.format(args.hardness))
-        if args.aux_list:
-            with open(args.data_path + '/' + args.eval_mode + '_list_{}.pickle'.format(args.hardness), 'wb') as f:
-                pickle.dump([fg_guess_track, fg_success_track], f)
-        else:
-            with open(args.data_path + '/' + args.eval_mode + '_{}.pickle'.format(args.hardness), 'wb') as f:
-                pickle.dump([fg_guess_track, fg_success_track], f)
+        plt = imagesc([fg_guess_track, fg_success_track], label=args.hw_model)
+        plt.savefig(args.data_path + '/' + 'FN_{}.png'.format(args.hardness))
+        with open(args.data_path + '/' + 'FN_{}.pickle'.format(args.hardness), 'wb') as f:
+            pickle.dump([fg_guess_track, fg_success_track], f)
         print('==> attacked {} users'.format(num / len(sw)))
-    else:
-        print('no such evaluation mode...')
-
-    experiment.send_notification('finished')
-    print('==> finished.')
-

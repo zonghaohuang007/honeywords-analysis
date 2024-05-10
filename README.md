@@ -69,33 +69,26 @@ python3 generate_honeywords.py --n_hw <number of sweetwords> --hw_gen_method <ho
 
 To evaluate the generated honeywords, please run:
 ```
-python3 evaluate_FN.py --n_hw <number of sweetwords> --hw_gen_method <honeyword-generation algorithm>
+python3 evaluate_FN.py --n_hw <number of sweetwords> --hw_gen_method <honeyword-generation algorithm> --hardness <hardness:{easy, medium, hard, average}>
 ```
 
 ### FP attack evaluation (user-chosen case)
 
 To evaluate the generated honeywords, please run:
 ```
-python3 evaluate_FP.py
+python3 evaluate_FP.py --n_hw <number of sweetwords> --hw_gen_method <honeyword-generation algorithm>
 ```
 
-### Honeyword-generation (algorithmically generated case)
 
-To generate honeywords, please run:
-```
-python3 generate_honeywords_machine.py
-```
+If you have any question on our work and this repo, please feel free to email the author.
 
-### FN attack evaluation (algorithmically generated case)
 
-To evaluate the generated honeywords, please run:
+If you find this git repo is helpful for your research, please consider to cite:
 ```
-python3 evaluate_FN_machine.py
-```
-
-### FP attack evaluation (algorithmically generated case)
-
-To evaluate the generated honeywords, please run:
-```
-python3 evaluate_FP_machine.py
+@inproceedings{huang2024:honeywords,
+  title={The impact of exposed passwords on honeyword efficacy},
+  author={Huang, Z. and Bauer, L. and Reiter M. K.},
+  booktitle={33\textsuperscript{rd}} USENIX Security Symposium,
+  year={2024}
+}
 ```

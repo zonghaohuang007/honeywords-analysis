@@ -300,7 +300,7 @@ def list_model():
     args.char_size = char_size
 
     # load data
-    with open(args.data_path, 'rb') as f:
+    with open('/BreachCompilationAnalysis/preprocessed_data/train_data.pickle', 'rb') as f:
         data = pickle.load(f)
 
     data_pool = [j for i in data for j in i]
