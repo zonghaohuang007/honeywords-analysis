@@ -15,6 +15,7 @@ pandas==1.5.0
 scipy==1.8.0
 torch==1.11.0
 zxcvbn-python==4.4.24
+tqdm==4.66.1
 ```
 
 ### Data download and preprocess
