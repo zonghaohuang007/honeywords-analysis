@@ -20,7 +20,7 @@ tqdm==4.66.1
 
 ### Data download and preprocess
 
-The first step is to download the 4iQ data. Please see "Get the data" in [the git repo](https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis).
+The first step is to download the 4iQ data. Please see "Get the data" in this [public git repo](https://github.com/philipperemy/tensorflow-1.4-billion-password-analysis).
 
 After downloading the data (e.g., by following the "Get the data" step), you will get a dir named "BreachCompilation" where there are data files included. Then you can reprocess the data by running (please make sure that your machine to process the data has enough memory):
 
