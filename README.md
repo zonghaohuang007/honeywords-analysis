@@ -88,7 +88,7 @@ If you find this git repo is helpful for your research, please consider to cite:
 ```
 @inproceedings{huang2024:honeywords,
   title={The impact of exposed passwords on honeyword efficacy},
-  author={Huang, Z. and Bauer, L. and Reiter M. K.},
+  author={Huang, Z. and Bauer, L. and Reiter, M. K.},
   booktitle={33\textsuperscript{rd}} USENIX Security Symposium,
   year={2024}
 }
