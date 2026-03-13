@@ -45,7 +45,7 @@ class DataGen(Dataset):
 
 def train_model():
 
-    model = Transformer_model(args.char_size, args.out_dim, args.num_layer, args.d_model, args.nhead, args.embedding_dim)
+    model = Transformer_embedding(args.char_size, args.out_dim, args.num_layer, args.d_model, args.nhead, args.embedding_dim)
     # model.to(device)
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
