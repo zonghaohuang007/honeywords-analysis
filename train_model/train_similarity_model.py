@@ -26,6 +26,7 @@ class DataGen(Dataset):
     def __init__(self, data_path, char_map, char2digits):
         with open(data_path, 'rb') as f:
             self.data = pickle.load(f)
+        print('==> loaded data.')
         self.char_map = char_map
         self.char2digits = char2digits
 
@@ -33,16 +34,62 @@ class DataGen(Dataset):
         return len(self.data)
 
     def __getitem__(self,idx):
-        
+
         x = random.sample(self.data[idx], 2)
-        x = self.char2digits(x, self.char_map, 30, add_sos=True)
-        x1 = x[0][1:]
-        x2 = x[1][:-1]
-        x3 = x[1][1:]
+        x = self.char2digits(x, self.char_map, 30, add_sos=False)
+        x1 = x[0]
+        x2 = x[1]
         
-        return x1, x2, x3
+        return x1, x2
 
 
+class SimCLR_Loss(nn.Module):
+    def __init__(self, batch_size, temperature):
+        super(SimCLR_Loss, self).__init__()
+        self.batch_size = batch_size
+        self.temperature = temperature
+
+        self.mask = self.mask_correlated_samples(batch_size)
+        self.criterion = nn.CrossEntropyLoss(reduction="sum")
+        self.similarity_f = nn.CosineSimilarity(dim=2)
+
+    def mask_correlated_samples(self, batch_size):
+        N = 2 * batch_size
+        mask = torch.ones((N, N), dtype=bool)
+        mask = mask.fill_diagonal_(0)
+        
+        for i in range(batch_size):
+            mask[i, batch_size + i] = 0
+            mask[batch_size + i, i] = 0
+        return mask
+
+    def forward(self, z_i, z_j):
+
+        N = 2 * self.batch_size
+
+        z = torch.cat((z_i, z_j), dim=0)
+        # print(z.shape)
+
+        sim = self.similarity_f(z.unsqueeze(1), z.unsqueeze(0)) / self.temperature
+        # print(sim.shape)
+
+        sim_i_j = torch.diag(sim, self.batch_size)
+        sim_j_i = torch.diag(sim, -self.batch_size)
+        
+        # We have 2N samples, but with Distributed training every GPU gets N examples too, resulting in: 2xNxN
+        positive_samples = torch.cat((sim_i_j, sim_j_i), dim=0).reshape(N, 1)
+        negative_samples = sim[self.mask].reshape(N, -1)
+        
+        #SIMCLR
+        labels = torch.from_numpy(np.array([0]*N)).reshape(-1).to(positive_samples.device).long() #.float()
+        
+        logits = torch.cat((positive_samples, negative_samples), dim=1)
+        loss = self.criterion(logits, labels)
+        loss /= N
+        
+        return loss
+    
+    
 def train_model():
 
     model = Transformer_embedding(args.char_size, args.out_dim, args.num_layer, args.d_model, args.nhead, args.embedding_dim)
@@ -68,9 +115,6 @@ def train_model():
         sampler=datasampler
     )
 
-    criterion = nn.CrossEntropyLoss()
-
-    # lr = lr_schedule(args.lr, epoch, max_epoch=args.n_epoch)
     lr = args.lr
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     print('==> learning rate is {}'.format(lr))
@@ -80,21 +124,20 @@ def train_model():
     for epoch in range(args.n_epoch):
         print('====== start {}-th epoch ======='.format(epoch + 1))
 
-        for x1_out, x2_in, x2_out in train_dataset:
+        for x1, x2 in tqdm(train_dataset):
 
             # train the model
             optimizer.zero_grad()
             model.train()
 
-            src_in = x1_out.to(torch.int64).to(device)
-            tgt_in = x2_in.to(torch.int64).to(device)
-            tgt_out = x2_out.to(torch.int64).to(device)
+            x1 = x1.to(torch.int64).to(device)
+            x2 = x2.to(torch.int64).to(device)
             
-            mask = (torch.ones(tgt_in.shape[1], tgt_in.shape[1]) - torch.triu(torch.ones(tgt_in.shape[1], tgt_in.shape[1]))).to(torch.bool).transpose(0, 1).to(device)
-        
-            logits = model([src_in, tgt_in], mask)
+            y1 = model(x1)
+            y2 = model(x2)
             
-            loss = criterion(logits.reshape(-1, args.char_size), tgt_out.reshape(-1, ))
+            criterion = SimCLR_Loss(batch_size = x1.shape[0], temperature = 0.5)
+            loss = criterion(y1, y2)
 
             loss.backward()
             optimizer.step()

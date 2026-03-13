@@ -3,9 +3,9 @@ import pickle
 from math import sin, cos, sqrt
 import random
 from matplotlib import pyplot as plt
-import seaborn as sns
+# import seaborn as sns
 
-sns.set_theme(style="darkgrid")
+# sns.set_theme(style="darkgrid")
 
 
 def digits2char(digits, cm_):
