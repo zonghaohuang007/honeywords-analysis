@@ -161,13 +161,13 @@ def train_model():
 if __name__ == '__main__':
     # get parser
     parser = argparse.ArgumentParser()
-    parser.add_argument('--n_epoch', type=int, default=30)
+    parser.add_argument('--n_epoch', type=int, default=10)
     parser.add_argument('--out_dim', type=int, default=256)
     parser.add_argument('--nhead', type=int, default=4)
     parser.add_argument('--num_layer', type=int, default=3)
     parser.add_argument('--d_model', type=int, default=64)
     parser.add_argument('--embedding_dim', type=int, default=64)
-    parser.add_argument('--batch_size', type=int, default=4096)
+    parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--lr', type=float, default=1e-03)
     parser.add_argument('--data_path', type=str, default='/BreachCompilationAnalysis/preprocessed_data/train_data.pickle')
     parser.add_argument("--local_rank", type=int, default=-1, help="number of cpu threads to use during batch generation")
