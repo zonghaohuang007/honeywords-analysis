@@ -45,7 +45,7 @@ class DataGen(Dataset):
 
 def train_model():
 
-    model = Transformer_model(args.char_size, args.out_dim, args.num_layer, args.d_model, args.nhead)
+    model = Transformer_model(args.char_size, args.out_dim, args.num_layer, args.d_model, args.nhead, args.embedding_dim)
     # model.to(device)
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
@@ -109,7 +109,7 @@ def train_model():
             step = step + 1
 
         print('====== end {}-th epoch ======='.format(epoch + 1))
-        dic = {'model': model.module.state_dict(), 'out_dim': args.out_dim, 'num_layer': args.num_layer, 'd_model': args.d_model, 'nhead': args.nhead, 'epoch': epoch+1}
+        dic = {'model': model.module.state_dict(), 'out_dim': args.out_dim, 'num_layer': args.num_layer, 'd_model': args.d_model, 'nhead': args.nhead, 'embedding_dim': args.embedding_dim}
         torch.save(dic, model_path + '/model')
 
     print('==> finished transformer-based similarity model.')
@@ -123,6 +123,7 @@ if __name__ == '__main__':
     parser.add_argument('--nhead', type=int, default=4)
     parser.add_argument('--num_layer', type=int, default=3)
     parser.add_argument('--d_model', type=int, default=64)
+    parser.add_argument('--embedding_dim', type=int, default=64)
     parser.add_argument('--batch_size', type=int, default=4096)
     parser.add_argument('--lr', type=float, default=1e-03)
     parser.add_argument('--data_path', type=str, default='/BreachCompilationAnalysis/preprocessed_data/train_data.pickle')
