@@ -57,6 +57,8 @@ if __name__ == '__main__':
     parser.add_argument('--hw_gen_method', type=str, default='rnn')
     parser.add_argument('--n_hw', type=int, default=20)
     parser.add_argument('--hardness', type=str, default='easy')
+    parser.add_argument('--data_path', type=str, default='')  # paths to your password datasets
+    parser.add_argument('--aux_list', action='store_false', default=True)  # set it True if the auxiliary passwords per account is a list; set it False if one only auxiliary password per account
     args = parser.parse_args()
 
     args.save_path = './hw/{}(hw:{})'.format(args.hw_gen_method, args.n_hw)
@@ -155,10 +157,10 @@ if __name__ == '__main__':
                 num = num + 1
                 if num % 100 == 0:
                     print('==> finished {} / {} hw evaluations | cost time: {} sec/sw'.format(num, i + 1, (time() - tic0) / 100))
-                    plt = imagesc([fg_guess_track, fg_success_track], label=args.hw_model)
+                    plt = imagesc([fg_guess_track, fg_success_track], label=args.hw_gen_method)
                     plt.savefig(args.data_path + '/' + 'FN_{}.png'.format(args.hardness))
                     tic0 = time()
-        plt = imagesc([fg_guess_track, fg_success_track], label=args.hw_model)
+        plt = imagesc([fg_guess_track, fg_success_track], label=args.hw_gen_method)
         plt.savefig(args.data_path + '/' + 'FN_{}.png'.format(args.hardness))
         with open(args.data_path + '/' + 'FN_{}.pickle'.format(args.hardness), 'wb') as f:
             pickle.dump([fg_guess_track, fg_success_track], f)
