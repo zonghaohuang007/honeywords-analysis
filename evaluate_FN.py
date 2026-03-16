@@ -57,11 +57,10 @@ if __name__ == '__main__':
     parser.add_argument('--hw_gen_method', type=str, default='rnn')
     parser.add_argument('--n_hw', type=int, default=20)
     parser.add_argument('--hardness', type=str, default='easy')
-    parser.add_argument('--data_path', type=str, default='')  # paths to your password datasets
     parser.add_argument('--aux_list', action='store_false', default=True)  # set it True if the auxiliary passwords per account is a list; set it False if one only auxiliary password per account
     args = parser.parse_args()
 
-    args.save_path = './hw/{}(hw:{})'.format(args.hw_gen_method, args.n_hw)
+    args.data_path = './hw/{}(hw:{})'.format(args.hw_gen_method, args.n_hw)
 
     # load CM map: a dictionary to map char or special symbol or number into digit
     char_map, char_map_inv = load_charmap('./char_map.pickle')
